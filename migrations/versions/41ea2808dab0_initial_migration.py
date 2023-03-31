@@ -5,6 +5,8 @@ Revises:
 Create Date: 2023-03-31 05:56:28.180291
 
 """
+from sqlalchemy import orm
+from app.models import Role
 from alembic import op
 import sqlalchemy as sa
 
@@ -61,6 +63,16 @@ def upgrade():
     sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('user_id', 'organization_id')
+    )
+
+    # Insert the roles
+    op.bulk_insert(
+        Role.__table__,
+        [
+            {'name': 'Owner'},
+            {'name': 'Manager'},
+            {'name': 'Viewer'},
+        ]
     )
     # ### end Alembic commands ###
 
