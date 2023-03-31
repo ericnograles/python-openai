@@ -1,26 +1,28 @@
-from flask import Blueprint, jsonify
-from .auth import jwt_required
+from flask import Blueprint, jsonify, request
+from .auth import jwt_required, role_required
 
-bp = Blueprint('api', __name__, url_prefix='/v1')
+bp = Blueprint('api', __name__)
 
-@bp.route('/user', methods=['GET'])
+@bp.route('/v1/user', methods=['GET'])
 @jwt_required
+@role_required(['Owner', 'Manager', 'Viewer'])
 def get_user():
-    # Add logic to get user
-    return jsonify({'message': 'GET /v1/user'})
+    return jsonify({"message": "Get user"})
 
-@bp.route('/user', methods=['PUT'])
+@bp.route('/v1/user', methods=['PUT'])
+@jwt_required
+@role_required(['Owner', 'Manager'])
 def update_user():
-    # Add logic to update user
-    return jsonify({'message': 'PUT /v1/user'})
+    return jsonify({"message": "Update user"})
 
-@bp.route('/transformation', methods=['POST'])
+@bp.route('/v1/transformation', methods=['POST'])
+@jwt_required
+@role_required(['Owner', 'Manager'])
 def create_transformation():
-    # Add logic to create a transformation
-    return jsonify({'message': 'POST /v1/transformation'})
+    return jsonify({"message": "Create transformation"})
 
-@bp.route('/transformation/<uuid:transformation_uuid>', methods=['GET'])
-def get_transformation(transformation_uuid):
-    # Add logic to get a transformation by UUID
-    return jsonify({'message': 'GET /v1/transformation/{transformation_uuid}'})
-
+@bp.route('/v1/transformation/<uuid>', methods=['GET'])
+@jwt_required
+@role_required(['Owner', 'Manager', 'Viewer'])
+def get_transformation(uuid):
+    return jsonify({"message": f"Get transformation {uuid}"})
