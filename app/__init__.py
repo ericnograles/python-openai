@@ -5,10 +5,13 @@ from dotenv import load_dotenv
 import os
 from .config import Config
 
-load_dotenv()  # Add this line to load the .env file
+load_dotenv()
 
 db = SQLAlchemy()
 migrate = Migrate()
+
+# Import your models here
+from . import models
 
 def create_app():
     app = Flask(__name__)
